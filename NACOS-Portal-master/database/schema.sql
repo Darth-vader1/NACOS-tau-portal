@@ -295,3 +295,158 @@ INSERT INTO career_paths (path_key, title, overview, skills_required, tools_tech
      ARRAY['TensorFlow', 'PyTorch', 'scikit-learn', 'Keras', 'Pandas', 'NumPy']
     )
 ON CONFLICT (path_key) DO NOTHING;
+
+-- =====================================================
+-- Phase 3: Events & Payments
+-- =====================================================
+
+-- Table: events
+-- Stores event information
+-- =====================================================
+CREATE TABLE IF NOT EXISTS events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_type VARCHAR(50) DEFAULT 'general',
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    location VARCHAR(255),
+    max_attendees INTEGER,
+    current_attendees INTEGER DEFAULT 0,
+    image_url TEXT,
+    is_active BOOLEAN DEFAULT true,
+    requires_payment BOOLEAN DEFAULT false,
+    payment_amount DECIMAL(10, 2) DEFAULT 0.00,
+    payment_details TEXT,
+    created_by UUID REFERENCES admin_users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Table: event_registrations
+-- Stores student event registrations
+-- =====================================================
+CREATE TABLE IF NOT EXISTS event_registrations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+    student_id UUID REFERENCES students(id) ON DELETE CASCADE,
+    registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    payment_status VARCHAR(20) DEFAULT 'pending',
+    payment_reference VARCHAR(100),
+    ticket_number VARCHAR(50) UNIQUE,
+    checked_in BOOLEAN DEFAULT false,
+    checked_in_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(event_id, student_id)
+);
+
+-- Table: payment_verification
+-- Stores payment verification requests
+-- =====================================================
+CREATE TABLE IF NOT EXISTS payment_verification (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    student_id UUID REFERENCES students(id) ON DELETE CASCADE,
+    event_id UUID REFERENCES events(id) ON DELETE SET NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_reference VARCHAR(100) UNIQUE NOT NULL,
+    payment_proof_url TEXT,
+    payment_date DATE NOT NULL,
+    payment_time TIME NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    verified_by UUID REFERENCES admin_users(id),
+    verified_at TIMESTAMP WITH TIME ZONE,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- =====================================================
+-- RLS Policies for Events
+-- =====================================================
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_registrations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE payment_verification ENABLE ROW LEVEL SECURITY;
+
+-- Events table policies
+CREATE POLICY "Anyone can view active events" ON events
+    FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Admins can manage events" ON events
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE user_id = auth.uid()
+        )
+    );
+
+-- Event registrations policies
+CREATE POLICY "Anyone can view their own registrations" ON event_registrations
+    FOR SELECT USING (student_id IN (
+        SELECT id FROM students WHERE user_id = auth.uid()
+    ));
+
+CREATE POLICY "Students can register for events" ON event_registrations
+    FOR INSERT WITH CHECK (student_id IN (
+        SELECT id FROM students WHERE user_id = auth.uid()
+    ));
+
+CREATE POLICY "Students can cancel their registration" ON event_registrations
+    FOR DELETE USING (student_id IN (
+        SELECT id FROM students WHERE user_id = auth.uid()
+    ));
+
+CREATE POLICY "Admins can view all registrations" ON event_registrations
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Admins can manage registrations" ON event_registrations
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE user_id = auth.uid()
+        )
+    );
+
+-- Payment verification policies
+CREATE POLICY "Students can view their own payments" ON payment_verification
+    FOR SELECT USING (student_id IN (
+        SELECT id FROM students WHERE user_id = auth.uid()
+    ));
+
+CREATE POLICY "Students can submit payment verification" ON payment_verification
+    FOR INSERT WITH CHECK (student_id IN (
+        SELECT id FROM students WHERE user_id = auth.uid()
+    ));
+
+CREATE POLICY "Admins can view all payments" ON payment_verification
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Admins can manage payments" ON payment_verification
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE user_id = auth.uid()
+        )
+    );
+
+-- =====================================================
+-- Triggers for updated_at
+-- =====================================================
+CREATE TRIGGER update_events_updated_at
+    BEFORE UPDATE ON events
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_payment_verification_updated_at
+    BEFORE UPDATE ON payment_verification
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
