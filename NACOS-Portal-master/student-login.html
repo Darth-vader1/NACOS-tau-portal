@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Sign In</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/tau_logo-removebg-preview.png" rel="icon">
+  <link href="assets/img/tau_logo-removebg-preview.png " rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .toggle-password{
+        position: absolute;
+        right: 10px;
+        top: 70%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .password-container{
+        position: relative;
+    }
+  </style>
+</head>
+
+<body class="starter-page-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top" style="justify-content: center;">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center" style="width: 100%;display: flex;justify-content: space-around;">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <img src="assets/img/nacos logo.jpg" alt="">
+        <h1 class="sitename"><span style="color: #1b8c0c;" id="nacos-text">Nigerian Association of Computing Students</span><br id="br"> <strong id="tau-text">Thomas Adewumi University</strong></h1>
+      </a>
+    </div>
+  </header>
+  
+  <main class="main">
+    
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Starter Page</h1>
+      </div>
+    </div><!-- End Page Title -->
+    
+    <!-- Starter Section Section -->
+    <section id="starter-section" class="starter-section section">
+      
+      <!-- Section Title -->
+      <div class="loginForm">
+        <img src="assets/img/tau_logo-removebg-preview.png" class="logo-underlay" alt="">
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Sign in</h2>
+            <p>Enter details to gain access to your dashboard</p>
+            <a href="student-signup.html">Not registered? <span>Click here to signup.</span></a>
+        </div><!-- End Section Title -->
+    
+        <div class="container" data-aos="fade-up" style="margin: 0px; padding: 0px;">
+            <form>
+                <!-- <div class="form-group">
+                  <label for="matric_no">Matric Number:</label>
+                  <input type="text" class="form-control" id="matric_no" aria-describedby="text" placeholder="Enter matric number" required>
+                </div> -->
+                <div class="form-group">
+                    <label for="email">Student Email:</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter student email" required>
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                </div>
+                <div class="password-container">
+                  <label for="email">Password:</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                  <button 
+                  id="toggle-password" 
+                  class="toggle-password"
+                  type="button"
+                  >
+                  <i class="bi bi-eye-slash"></i></button>
+                </div>
+                <!-- Align Checkbox with Input Fields -->
+                <div class="form-check spaced-div checkbx form-group" style="margin-left: 21px;">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1" for="exampleCheck1" >
+                    <label class="form-check-label" for="exampleCheck1"  id="exampleCheck1">Remember Me</label>
+                </div>
+                <!-- Center Submit Button -->
+                <div style="display: flex; justify-content: center; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary"
+                        style="background-color: #1b8c0c; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease-in-out; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);"
+                        onmouseover="this.style.backgroundColor='#166a0a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 10px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.backgroundColor='#1b8c0c'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.2)';"
+                        onmousedown="this.style.transform='translateY(1px)'; this.style.boxShadow='0 3px 6px rgba(0, 0, 0, 0.2)';"
+                        onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 10px rgba(0, 0, 0, 0.3)';">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    </section><!-- /Starter Section Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container footer-top" style="display: flex;justify-content: center;width: 100%;max-width: max-content;">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about" style="width: 100%;justify-content: center;display: flex;flex-direction: column;">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">NACOS - TAU</span>
+          </a>
+          <div class="logo d-flex align-items-center" style="justify-content: center;">
+            <img src="assets/img/nacos logo.jpg" class="img-fluid" alt="" style="padding-right: 5%;max-height: 50px;">
+            <img src="assets/img/tau_logo-removebg-preview.png" alt="" class="img-fluid" style="max-height: 60px;">
+          </div>
+          <div class="footer-contact pt-3" style="text-align: center;">
+            <p>University Drive, Off Idofin Road</p>
+            <p>Oko-Irese, Kwara State</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+234 813 624 2060</span></p>
+            <p><strong>Email:</strong> <span>nacos@tau.edu.ng</span></p>
+          </div>
+          <div class="social-links d-flex mt-4" style="justify-content: center;">
+            <a href="https://www.tiktok.com/@nacos_tau?is_from_webapp=1&sender_device=pc"><i class="bi bi-tiktok"></i></a>
+            <a href="https://www.instagram.com/nacos_tauchapter?igsh=MWw1ZTlpaWZxZnl6cA=="><i class="bi bi-instagram"></i></a>
+            <a href="https://www.linkedin.com/company/nacos-tauchapter/about/"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div> -->
+
+        <!-- <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div> -->
+
+        <!-- <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Our Newsletter</h4>
+          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+          <form action="forms/newsletter.php" method="post" class="php-email-form">
+            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
+          </form>
+        </div> -->
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p> <span>Copyright</span> © <strong class="px-1 sitename">NACOS - TAU Development Team.</strong><br><span>All Rights Reserved.</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+
+  <!-- Main JS File -->
+  <script src="dashboard asseets/js/main.js"></script>
+  <script src="dashboard asseets/js/signin.js" type="module"></script>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+</body>
+
+</html>
