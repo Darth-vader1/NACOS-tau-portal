@@ -6,7 +6,6 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // ============================================
 const SUPABASE_URL = "https://gqhhvbnbbmstfrhtegsl.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxaGh2Ym5iYm1zdGZyaHRlZ3NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzkwOTcsImV4cCI6MjA5MTc1NTA5N30.cSjwB9V-jY3yekNz0wS8EdlKG79lQr-SYPRj20eGicg";
-  // ← PASTE YOUR ACTUAL ANON KEY HERE
 
 // Create single supabase client instance
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
